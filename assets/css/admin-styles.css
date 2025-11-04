@@ -1,0 +1,292 @@
+/**
+ * LiBookin Monthly Offer - Admin Styles
+ */
+
+/* Dashboard */
+.libookin-admin-dashboard {
+    margin-top: 20px;
+}
+
+.libookin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-box {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.stat-box h3 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #0073aa;
+    margin: 0;
+    line-height: 1;
+}
+
+.stat-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.libookin-current-results {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.libookin-current-results h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+.libookin-current-results table {
+    margin-top: 20px;
+}
+
+/* Vote Results Page */
+.libookin-admin-filters {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.libookin-admin-filters form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.libookin-admin-filters label {
+    font-weight: 600;
+    color: #555;
+}
+
+.libookin-admin-filters input[type="month"] {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.libookin-admin-filters .button-primary {
+    margin-left: auto;
+}
+
+/* Tables */
+.wp-list-table.libookin-table {
+    margin-top: 20px;
+}
+
+.wp-list-table.libookin-table th {
+    font-weight: 600;
+    color: #555;
+}
+
+.wp-list-table.libookin-table td {
+    vertical-align: middle;
+}
+
+.wp-list-table.libookin-table a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.wp-list-table.libookin-table a:hover {
+    color: #005a87;
+    text-decoration: underline;
+}
+
+/* Charity Post Type */
+.post-type-libookin_charity .wp-list-table th,
+.post-type-libookin_charity .wp-list-table td {
+    vertical-align: middle;
+}
+
+.post-type-libookin_charity .column-thumbnail img {
+    max-width: 60px;
+    height: auto;
+    border-radius: 4px;
+}
+
+/* Admin Menu Icon */
+#adminmenu .toplevel_page_libookin-monthly-offer .wp-menu-image img {
+    width: 20px;
+    height: auto;
+    opacity: 0.6;
+}
+
+#adminmenu .toplevel_page_libookin-monthly-offer:hover .wp-menu-image img,
+#adminmenu .toplevel_page_libookin-monthly-offer.current .wp-menu-image img {
+    opacity: 1;
+}
+
+/* Admin Notices */
+.notice.libookin-notice {
+    border-left-color: #0073aa;
+}
+
+.notice.libookin-notice p {
+    margin: 0.5em 0;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .libookin-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .libookin-admin-filters form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .libookin-admin-filters .button-primary {
+        margin-left: 0;
+    }
+}
+
+/* Loading Spinner */
+.libookin-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Admin Dashboard Widgets */
+.libookin-dashboard-widget {
+    margin-bottom: 20px;
+}
+
+.libookin-dashboard-widget h3 {
+    margin: 0;
+    padding: 10px 15px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.libookin-dashboard-widget .inside {
+    padding: 15px;
+}
+
+/* Export Button */
+.libookin-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.libookin-export-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Status Badges */
+.libookin-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.libookin-status-badge.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.libookin-status-badge.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.libookin-status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Charts and Graphs */
+.libookin-chart-container {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+}
+
+.libookin-chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Tooltips */
+.libookin-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.libookin-tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.libookin-tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
