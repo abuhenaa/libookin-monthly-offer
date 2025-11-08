@@ -59,6 +59,8 @@ class Libookin_Monthly_Offer {
      * Load required files
      */
     private function load_dependencies() {
+
+        require_once LIBOOKIN_MO_PLUGIN_DIR . 'functions.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-database.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-charity-post-type.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-vote-handler.php';
