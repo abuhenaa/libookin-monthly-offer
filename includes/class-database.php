@@ -49,9 +49,26 @@ class Libookin_MO_Database {
             KEY month_year (month_year)
         ) $charset_collate;";
 
+        //charity earnings table
+        $earnings_table = $wpdb->prefix . 'libookin_charity_earnings';
+        $charity_earnings_query = "CREATE TABLE $earnings_table (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            order_id BIGINT(20) UNSIGNED NOT NULL,
+            product_id BIGINT(20) UNSIGNED NOT NULL,
+            charity_id BIGINT(20) UNSIGNED NOT NULL,
+            charity_name VARCHAR(255) NOT NULL,
+            amount DECIMAL(10,2) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY order_id (order_id),
+            KEY charity_id (charity_id),
+            KEY product_id (product_id)
+        ) $charset_collate;";
+
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta( $votes_sql );
         dbDelta( $results_sql );
+        dbDelta( $charity_earnings_query );
     }
 
     /**
@@ -216,6 +233,28 @@ class Libookin_MO_Database {
             ORDER BY v.vote_date DESC",
             $start_date,
             $end_date
+        ) );
+
+        return $results;
+    }
+
+    /**
+     * Get charity earnings for current month
+     *
+     * @param string $month_year Month year (Y-m format)
+     * @return array
+     */
+    public static function get_charity_earnings( $month_year = null ) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'libookin_charity_earnings';
+
+        if ( null === $month_year ) {
+            $month_year = date( 'Y-m' );
+        }
+
+        $results = $wpdb->get_results( $wpdb->prepare(
+            "SELECT * FROM $table WHERE month_year = %s ORDER BY earnings DESC",
+            $month_year
         ) );
 
         return $results;

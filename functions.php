@@ -52,3 +52,15 @@ function libookin_save_charity_data( $post_id ) {
         update_post_meta( $post_id, '_libookin_charity', sanitize_text_field( $_POST['_libookin_charity'] ) );
     }
 }
+
+//check HPOS compatibility
+add_action( 'before_woocommerce_init', 'libookin_monthly_offer_check_HPOS_compatibility' );
+function libookin_monthly_offer_check_HPOS_compatibility() {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+            'custom_order_tables', // HPOS feature slug
+            LIBOOKIN_MO_PLUGIN_BASENAME,
+            true
+        );
+    }
+}

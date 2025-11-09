@@ -86,6 +86,15 @@ class Libookin_MO_Admin {
             'manage_options',
             'post-new.php?post_type=libookin_charity'
         );
+        //charity earnings sub menu
+        add_submenu_page(
+            'libookin-monthly-offer',
+            __( 'Charity Earnings', 'libookin-monthly-offer' ),
+            __( 'Charity Earnings', 'libookin-monthly-offer' ),
+            'manage_options',
+            'libookin-charity-earnings',
+            array( $this, 'display_charity_earnings' )
+        );
     }
 
     /**
@@ -350,5 +359,47 @@ class Libookin_MO_Admin {
 
         fclose( $output );
         exit;
+    }
+
+    /**
+     * Display charity earnings page
+     */
+    public function display_charity_earnings() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        $current_month = date( 'Y-m' );
+        $earnings = Libookin_MO_Database::get_charity_earnings( $current_month );
+
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e( 'Charity Earnings', 'libookin-monthly-offer' ); ?></h1>
+            
+            <div class="libookin-charity-earnings">
+                <div class="libookin-stats-grid">
+                    <div class="stat-box">
+                        <h3><?php esc_html_e( 'Total Earnings This Month', 'libookin-monthly-offer' ); ?></h3>
+                        <p class="stat-number">
+                            <?php 
+                            $total_earnings = array_sum( wp_list_pluck( $earnings, 'earnings' ) );
+                            echo number_format_i18n( $total_earnings ); 
+                            ?>
+                        </p>
+                    </div>
+
+                    <div class="stat-box">
+                        <h3><?php esc_html_e( 'Active Charities', 'libookin-monthly-offer' ); ?></h3>
+                        <p class="stat-number">
+                            <?php 
+                            $charity_count = wp_count_posts( 'libookin_charity' );
+                            echo number_format_i18n( $charity_count->publish ); 
+                            ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 }
