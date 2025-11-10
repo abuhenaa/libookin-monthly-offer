@@ -19,14 +19,24 @@ class Libookin_Bundle_Product {
     }
 
     public function __construct() {
-        add_action( 'woocommerce_order_status_completed', array( $this, 'process_bundle_order' ) );
+        add_action( 'woocommerce_order_status_completed', array( $this, 'process_bundle_order' ), 11, 1 );
     }
 
     public function process_bundle_order( $order_id ) {
 
         global $wpdb;
-
+       
         $orders              = wc_get_order( $order_id );
+        $parent_order_id     = $orders->get_parent_id();
+        if( $parent_order_id ) {
+            return;
+        }
+       
+        if ( get_post_meta( $order_id, '_libookin_processed', true ) ) {
+            return; // already processed
+        }
+        update_post_meta( $order_id, '_libookin_processed', 1 );
+
         $price_ht            = $orders->get_subtotal();
         $authors_percentage  = 50;
         $platform_percentage = 40;
@@ -41,17 +51,13 @@ class Libookin_Bundle_Product {
             $product       = $item->get_product();
             $product_title = $item->get_name();
             $parent_id     = $item->get_meta( '_woosb_parent_id', true );
+            $vendor_id    = get_post_field('post_author', $product_id);
 
-            if( empty( $parent_id ) ) {
-                continue;
-            }
-
+            //check if the product is bundle product
             if ( $product->get_type() == 'woosb' ) {
-
                 //get all the vendors info in the bundle product
                 $charity_id   = get_post_meta( $product_id, '_libookin_charity', true );
                 $charity_name = get_the_title( $charity_id );
-                $vendor_id    = get_post_field('post_author', $product_id);
                 $vendor_name  = get_the_title( $vendor_id );
                 //insert charity earnings
                 $wpdb->insert(
@@ -61,28 +67,30 @@ class Libookin_Bundle_Product {
                         'product_id'     => $product_id,
                         'charity_id'     => $charity_id,
                         'charity_name'   => $charity_name,
-                        'charity_amount' => $charity_amount,
+                        'amount'         => $charity_amount,
                         'created_at'     => current_time( 'mysql' ),
                     ),
                     array( '%d', '%d', '%d', '%s', '%f', '%s' )
                 );
-
+            }
+            
+            //add royalties for each selected vendors for the bundle product
+            if( $parent_id ) {
                 // Insert royalty record
                 $wpdb->insert(
                     $wpdb->prefix . 'libookin_royalties',
-                    array(
-                        'order_id'        => $order_id,
-                        'product_id'      => $product_id,
-                        'vendor_id'       => $vendor_id,
-                        'price_ht'        => $price_ht,
-                        'royalty_percent' => 10,
-                        'royalty_amount'  => $per_author,
-                        'created_at'      => current_time( 'mysql' ),
-                        'payout_status'   => 'pending',
-                    ),
-                    array( '%d', '%d', '%d', '%f', '%f', '%f', '%s', '%s' )
-                );
-
+                array(
+                    'order_id'        => $order_id,
+                    'product_id'      => $product_id,
+                    'vendor_id'       => $vendor_id,
+                    'price_ht'        => $price_ht,
+                    'royalty_percent' => 10,
+                    'royalty_amount'  => $per_author,
+                    'created_at'      => current_time( 'mysql' ),
+                    'payout_status'   => 'pending',
+                ),
+                array( '%d', '%d', '%d', '%f', '%f', '%f', '%s', '%s' )
+            );
             }
 
         }

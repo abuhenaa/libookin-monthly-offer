@@ -75,6 +75,7 @@ class Libookin_Vote_Display {
      * @param int $order_id Order ID
      */
     public function display_vote_section( $order_id ) {
+
         if ( ! $order_id ) {
             return;
         }
