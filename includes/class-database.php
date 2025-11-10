@@ -58,11 +58,12 @@ class Libookin_MO_Database {
             charity_id BIGINT(20) UNSIGNED NOT NULL,
             charity_name VARCHAR(255) NOT NULL,
             amount DECIMAL(10,2) NOT NULL,
+            month_year VARCHAR(7) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             KEY order_id (order_id),
             KEY charity_id (charity_id),
-            KEY product_id (product_id)
+            KEY month_year (month_year)
         ) $charset_collate;";
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -253,7 +254,7 @@ class Libookin_MO_Database {
         }
 
         $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT * FROM $table WHERE month_year = %s ORDER BY earnings DESC",
+            "SELECT * FROM $table where month_year = %s",
             $month_year
         ) );
 

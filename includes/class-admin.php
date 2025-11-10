@@ -369,34 +369,47 @@ class Libookin_MO_Admin {
             return;
         }
 
-        $current_month = date( 'Y-m' );
-        $earnings = Libookin_MO_Database::get_charity_earnings( $current_month );
+        $selected_month = isset( $_GET['month'] ) ? sanitize_text_field( $_GET['month'] ) : date( 'Y-m' );
+        $earnings = Libookin_MO_Database::get_charity_earnings( $selected_month );
 
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Charity Earnings', 'libookin-monthly-offer' ); ?></h1>
             
             <div class="libookin-charity-earnings">
-                <div class="libookin-stats-grid">
-                    <div class="stat-box">
-                        <h3><?php esc_html_e( 'Total Earnings This Month', 'libookin-monthly-offer' ); ?></h3>
-                        <p class="stat-number">
-                            <?php 
-                            $total_earnings = array_sum( wp_list_pluck( $earnings, 'earnings' ) );
-                            echo number_format_i18n( $total_earnings ); 
-                            ?>
-                        </p>
-                    </div>
-
-                    <div class="stat-box">
-                        <h3><?php esc_html_e( 'Active Charities', 'libookin-monthly-offer' ); ?></h3>
-                        <p class="stat-number">
-                            <?php 
-                            $charity_count = wp_count_posts( 'libookin_charity' );
-                            echo number_format_i18n( $charity_count->publish ); 
-                            ?>
-                        </p>
-                    </div>
+                <div class="libookin-admin-filters">
+                    <form method="get">
+                        <input type="hidden" name="page" value="libookin-charity-earnings">
+                        <label for="month-select"><?php esc_html_e( 'Select Month:', 'libookin-monthly-offer' ); ?></label>
+                        <input type="month" id="month-select" name="month" value="<?php echo esc_attr( $selected_month ); ?>">
+                        <button type="submit" class="button"><?php esc_html_e( 'Filter', 'libookin-monthly-offer' ); ?></button>
+                    </form>
+                </div>
+                <div class="libookin-earnings-table">
+                    <table class="wp-list-table widefat striped">
+                        <thead>
+                            <tr>
+                                <th><?php esc_html_e( 'Charity', 'libookin-monthly-offer' ); ?></th>
+                                <th><?php esc_html_e( 'Total Earnings', 'libookin-monthly-offer' ); ?></th>
+                            </tr>
+                        </thead>
+                        <?php if ( empty( $earnings ) ) : ?>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"><?php esc_html_e( 'No earnings recorded for this month.', 'libookin-monthly-offer' ); ?></td>
+                                </tr>
+                            </tbody>
+                        <?php else : ?>
+                        <tbody>
+                            <?php foreach ( $earnings as $earning ) : ?>
+                                <tr>
+                                    <td><?php echo esc_html( get_the_title( $earning->charity_id ) ); ?></td>
+                                    <td><?php echo wc_price( $earning->amount ); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <?php endif; ?>
+                    </table>
                 </div>
             </div>
         </div>

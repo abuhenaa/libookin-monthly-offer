@@ -68,9 +68,10 @@ class Libookin_Bundle_Product {
                         'charity_id'     => $charity_id,
                         'charity_name'   => $charity_name,
                         'amount'         => $charity_amount,
+                        'month_year'     => date( 'Y-m' ),
                         'created_at'     => current_time( 'mysql' ),
                     ),
-                    array( '%d', '%d', '%d', '%s', '%f', '%s' )
+                    array( '%d', '%d', '%d', '%s', '%f', '%s', '%s' )
                 );
             }
             
