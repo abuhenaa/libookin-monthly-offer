@@ -274,7 +274,7 @@ class Libookin_MO_Admin {
                     <thead>
                         <tr>
                             <th><?php esc_html_e( 'Order ID', 'libookin-monthly-offer' ); ?></th>
-                            <th><?php esc_html_e( 'User ID', 'libookin-monthly-offer' ); ?></th>
+                            <th><?php esc_html_e( 'Customer Name', 'libookin-monthly-offer' ); ?></th>
                             <th><?php esc_html_e( 'Charity', 'libookin-monthly-offer' ); ?></th>
                             <th><?php esc_html_e( 'Vote Date', 'libookin-monthly-offer' ); ?></th>
                         </tr>
@@ -288,9 +288,12 @@ class Libookin_MO_Admin {
                                     </a>
                                 </td>
                                 <td>
-                                    <?php if ( $vote->user_id ) : ?>
+                                    <?php if ( $vote->user_id ) :
+                                        $user = get_userdata( $vote->user_id );
+                                        $name = $user->first_name . ' ' . $user->last_name;
+                                    ?>
                                         <a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . $vote->user_id ) ); ?>">
-                                            <?php echo esc_html( $vote->user_id ); ?>
+                                            <?php echo esc_html( $name ); ?>
                                         </a>
                                     <?php else : ?>
                                         <?php esc_html_e( 'Guest', 'libookin-monthly-offer' ); ?>
