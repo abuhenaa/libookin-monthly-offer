@@ -254,7 +254,7 @@ class Libookin_MO_Database {
         }
 
         $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT * FROM $table where month_year = %s",
+            "SELECT charity_id, charity_name, SUM(amount) as total_earnings FROM $table where month_year = %s GROUP BY charity_id",
             $month_year
         ) );
 

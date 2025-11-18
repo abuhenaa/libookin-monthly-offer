@@ -407,7 +407,7 @@ class Libookin_MO_Admin {
                             <?php foreach ( $earnings as $earning ) : ?>
                                 <tr>
                                     <td><?php echo esc_html( get_the_title( $earning->charity_id ) ); ?></td>
-                                    <td><?php echo wc_price( $earning->amount ); ?></td>
+                                    <td><?php echo wc_price( $earning->total_earnings ); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
