@@ -18,7 +18,7 @@
     color: #333;
 }
 
-.libookin-vote-section > p {
+.libookin-vote-section>p {
     margin-bottom: 25px;
     color: #666;
     font-size: 16px;
@@ -138,8 +138,13 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .libookin-popup-content {
@@ -160,6 +165,7 @@
         transform: translateY(50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -408,16 +414,277 @@
     .libookin-vote-options {
         grid-template-columns: 1fr;
     }
-    
+
     .libookin-popup-content {
         padding: 30px 20px;
     }
-    
+
     .current-charity-content {
         flex-direction: column;
     }
-    
+
     .current-charity-image img {
         max-width: 100%;
+    }
+}
+
+/* =========================
+   Bundle Offer Styles (moved from book-offer.html)
+   ========================= */
+
+/* Reset & Base for the bundle section */
+.libookin-section,
+.libookin-bundle-offer {
+    box-sizing: border-box;
+}
+
+.libookin-section * {
+    box-sizing: inherit;
+}
+
+.libookin-section {
+    padding: 3rem 1.5rem;
+}
+
+.libookin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.libookin-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.libookin-title {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #8B2B7D;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.02em;
+}
+
+.libookin-subtitle {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: #00A5B5;
+    margin: 0;
+    letter-spacing: 0.3em;
+    text-transform: lowercase;
+}
+
+.libookin-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.libookin-books-area {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.libookin-books-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.libookin-book-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.libookin-book-cover {
+    flex-shrink: 0;
+    width: 90px;
+    height: 135px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(139, 43, 125, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.libookin-book-cover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(139, 43, 125, 0.2), 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.libookin-book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.libookin-book-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.libookin-book-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d2d2d;
+    margin: 0 0 0.5rem 0;
+}
+
+.libookin-book-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #555;
+    margin: 0;
+}
+
+.libookin-learn-more {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(139, 43, 125, 0.15);
+}
+
+.libookin-learn-more-title {
+    font-size: 1rem;
+    color: #8B2B7D;
+    text-decoration: underline;
+    margin: 0 0 1rem 0;
+    font-weight: 500;
+}
+
+.libookin-learn-more-text {
+    font-size: 0.95rem;
+    color: #444;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
+}
+
+.libookin-learn-more-text strong {
+    color: #2d2d2d;
+}
+
+.libookin-offer-box {
+    background: #fff;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    height: fit-content;
+}
+
+.libookin-badge {
+    background: linear-gradient(135deg, #C41E3A 0%, #9B1B30 100%);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border-radius: 4px;
+    text-transform: capitalize;
+    box-shadow: 0 3px 10px rgba(196, 30, 58, 0.3);
+}
+
+.libookin-price {
+    font-size: 4rem;
+    font-weight: 300;
+    color: #00A5B5;
+    line-height: 1;
+    margin-top: 0.5rem;
+}
+
+.libookin-price-note {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+.libookin-offer-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin: 0.5rem 0;
+}
+
+.libookin-offer-description {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.libookin-tagline {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #C41E3A;
+    margin: 0.5rem 0;
+}
+
+.libookin-cta {
+    background: linear-gradient(135deg, #8B2B7D 0%, #6B1D5F 100%);
+    color: #fff;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 15px rgba(139, 43, 125, 0.3);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.libookin-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 43, 125, 0.4);
+    background: linear-gradient(135deg, #9B3B8D 0%, #7B2D6F 100%);
+}
+
+@media (min-width: 640px) {
+    .libookin-books-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem 2rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .libookin-content {
+        grid-template-columns: 1fr 320px;
+        gap: 3rem;
+    }
+
+    .libookin-offer-box {
+        position: sticky;
+        top: 2rem;
+    }
+}
+
+@media (max-width: 639px) {
+    .libookin-section {
+        padding: 2rem 1rem;
+    }
+
+    .libookin-book-cover {
+        width: 75px;
+        height: 112px;
+    }
+
+    .libookin-book-title {
+        font-size: 1rem;
+    }
+
+    .libookin-book-description {
+        font-size: 0.85rem;
+    }
+
+    .libookin-offer-box {
+        padding: 1.5rem 1rem;
+    }
+
+    .libookin-price {
+        font-size: 3rem;
     }
 }

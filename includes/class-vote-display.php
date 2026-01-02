@@ -178,8 +178,8 @@ class Libookin_Vote_Display {
                     ); 
                     ?>
                 </p>
-                
-                <a href="/monthly-offer" class="libookin-popup-btn">
+                <?php $popup_link = get_option( 'libookin_popup_link', '' ); ?>
+                <a href="<?php echo esc_url( $popup_link ); ?>" class="libookin-popup-btn">
                     <?php esc_html_e( 'View Monthly Offer', 'libookin-monthly-offer' ); ?>
                 </a>
             </div>

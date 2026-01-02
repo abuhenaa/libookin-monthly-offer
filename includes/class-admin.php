@@ -95,6 +95,16 @@ class Libookin_MO_Admin {
             'libookin-charity-earnings',
             array( $this, 'display_charity_earnings' )
         );
+
+        //settings
+        add_submenu_page(
+            'libookin-monthly-offer',
+            __( 'Settings', 'libookin-monthly-offer' ),
+            __( 'Settings', 'libookin-monthly-offer' ),
+            'manage_options',
+            'libookin-mo-settings',
+            array( $this, 'display_settings_page' )
+        );
     }
 
     /**
@@ -415,6 +425,54 @@ class Libookin_MO_Admin {
                     </table>
                 </div>
             </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * Settings page
+     */
+    public function display_settings_page() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Handle form submission
+        if ( isset( $_POST['libookin_mo_settings_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['libookin_mo_settings_nonce'] ) ), 'libookin_mo_save_settings' ) ) {
+            $popup_link = isset( $_POST['popup_link'] ) ? esc_url_raw( $_POST['popup_link'] ) : '';
+
+            update_option( 'libookin_popup_link', $popup_link );
+
+            echo '<div class="updated"><p>' . esc_html__( 'Settings saved.', 'libookin-monthly-offer' ) . '</p></div>';
+        }
+
+        $popup_link = get_option( 'libookin_popup_link', '' );
+
+        ?>
+        <div class="wrap">
+            <h1><?php esc_html_e( 'Monthly Offer Settings', 'libookin-monthly-offer' ); ?></h1>
+            <form method="post" action="">
+                <?php wp_nonce_field( 'libookin_mo_save_settings', 'libookin_mo_settings_nonce' ); ?>
+
+                <table class="form-table">
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Popup link', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input 
+                            type="text" 
+                            name="popup_link" 
+                            value="<?php echo esc_url( $popup_link ); ?>" 
+                            class="regular-text" 
+                            placeholder="<?php esc_attr_e( 'https://example.com/popup', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Link to the popup content.', 'libookin-monthly-offer' ); ?></p>
+                   </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e( 'Save Settings', 'libookin-monthly-offer' ); ?></th>
+                        <td>
+                            <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'libookin-monthly-offer' ); ?></button>
+                        </td>
+                </table>
+            </form>
         </div>
         <?php
     }
