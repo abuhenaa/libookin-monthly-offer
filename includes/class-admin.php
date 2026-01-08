@@ -440,14 +440,25 @@ class Libookin_MO_Admin {
         // Handle form submission
         if ( isset( $_POST['libookin_mo_settings_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['libookin_mo_settings_nonce'] ) ), 'libookin_mo_save_settings' ) ) {
             $popup_link = isset( $_POST['popup_link'] ) ? esc_url_raw( $_POST['popup_link'] ) : '';
+            $offer_of_the_month_page_link = isset( $_POST['offer_of_the_month_page_link'] ) ? esc_url_raw( $_POST['offer_of_the_month_page_link'] ) : '';
+            $offer_box_tagline = isset( $_POST['offer_box_tagline'] ) ? sanitize_text_field( $_POST['offer_box_tagline'] ) : '';
+            $learn_more_title = isset( $_POST['learn_more_title'] ) ? sanitize_text_field( $_POST['learn_more_title'] ) : '';
+            $learn_more_description = isset( $_POST['learn_more_description'] ) ? sanitize_textarea_field( $_POST['learn_more_description'] ) : '';
 
             update_option( 'libookin_popup_link', $popup_link );
+            update_option( 'libookin_offer_of_the_month_page_link', $offer_of_the_month_page_link );
+            update_option( 'libookin_offer_box_tagline', $offer_box_tagline );
+            update_option( 'libookin_learn_more_title', $learn_more_title );
+            update_option( 'libookin_learn_more_description', $learn_more_description );
 
             echo '<div class="updated"><p>' . esc_html__( 'Settings saved.', 'libookin-monthly-offer' ) . '</p></div>';
         }
 
         $popup_link = get_option( 'libookin_popup_link', '' );
-
+        $offer_of_the_month_page_link = get_option( 'libookin_offer_of_the_month_page_link', '' );
+        $offer_box_tagline = get_option( 'libookin_offer_box_tagline', '' );
+        $learn_more_title = get_option( 'libookin_learn_more_title', '' );
+        $learn_more_description = get_option( 'libookin_learn_more_description', '' );
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Monthly Offer Settings', 'libookin-monthly-offer' ); ?></h1>
@@ -466,11 +477,60 @@ class Libookin_MO_Admin {
                             placeholder="<?php esc_attr_e( 'https://example.com/popup', 'libookin-monthly-offer' ); ?>">
                         <p class="description"><?php esc_html_e( 'Link to the popup content.', 'libookin-monthly-offer' ); ?></p>
                    </tr>
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Offer of the Month Page Link', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input 
+                            type="text" 
+                            name="offer_of_the_month_page_link" 
+                            value="<?php echo esc_url( $offer_of_the_month_page_link ); ?>" 
+                            class="regular-text" 
+                            placeholder="<?php esc_attr_e( 'https://example.com/offer-of-the-month', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Link to the offer of the month page.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Offer Box Tagline', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input 
+                            type="text" 
+                            name="offer_box_tagline" 
+                            value="<?php echo esc_attr( $offer_box_tagline ); ?>" 
+                            class="regular-text" 
+                            placeholder="<?php esc_attr_e( 'Et laissez parler votre coeur', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Tagline for the offer box.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Learn More Title', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input 
+                            type="text" 
+                            name="learn_more_title" 
+                            value="<?php echo esc_attr( $learn_more_title ); ?>" 
+                            class="regular-text" 
+                            placeholder="<?php esc_attr_e( 'Learn More', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Title for the learn more section.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Learn More Description', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <textarea 
+                            name="learn_more_description" 
+                            class="regular-text" 
+                            placeholder="<?php esc_attr_e( 'Discover more about our special offer.', 'libookin-monthly-offer' ); ?>"
+                        ><?php echo esc_textarea( $learn_more_description ); ?></textarea>
+                        <p class="description"><?php esc_html_e( 'Description for the learn more section.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+
                     <tr>
                         <th scope="row"><?php esc_html_e( 'Save Settings', 'libookin-monthly-offer' ); ?></th>
                         <td>
                             <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'libookin-monthly-offer' ); ?></button>
                         </td>
+                    </tr>
                 </table>
             </form>
         </div>

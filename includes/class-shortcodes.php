@@ -139,7 +139,14 @@ class Libookin_MO_Shortcodes {
         $this->enqueue_styles();
 
         // Attempt to get bundled items
-        $items = $product->get_items();        
+        $items = $product->get_items();
+
+        //options value
+        $offer_of_the_month_page_link = get_option( 'libookin_offer_of_the_month_page_link', '' );
+        $offer_box_tagline = get_option( 'libookin_offer_box_tagline', '' );
+        $learn_more_title = get_option( 'libookin_learn_more_title', '' );
+        $learn_more_description = get_option( 'libookin_learn_more_description', '' );
+
 
         ob_start();
         ?>
@@ -178,8 +185,8 @@ class Libookin_MO_Shortcodes {
                         </div>
 
                         <div class="libookin-learn-more">
-                            <h4 class="libookin-learn-more-title"><?php esc_html_e( 'Learn more about the offer', 'libookin-monthly-offer' ); ?></h4>
-                            <p class="libookin-learn-more-text"><?php printf( esc_html__( 'Get all %s at an incredible price.', 'libookin-monthly-offer' ), '<strong>' . number_format_i18n( count( $items ) ) . ' ' . esc_html__( 'books', 'libookin-monthly-offer' ) . '</strong>' ); ?></p>
+                            <h4 class="libookin-learn-more-title"><?php echo esc_html( $learn_more_title ); ?></h4>
+                            <p class="libookin-learn-more-text"><?php echo esc_html( $learn_more_description ); ?></p>
                         </div>
                     </div>
 
@@ -189,8 +196,8 @@ class Libookin_MO_Shortcodes {
                         <p class="libookin-price-note"><?php echo esc_html__( 'for the bundle', 'libookin-monthly-offer' ); ?></p>
                         <h3 class="libookin-offer-title"><?php echo esc_html( $product->get_name() ); ?></h3>
                         <p class="libookin-offer-description"><?php echo wp_kses_post( wp_trim_words( $product->get_description(), 25, '...' ) ); ?></p>
-                        <p class="libookin-tagline"><?php echo esc_html__( 'Read more, spend less', 'libookin-monthly-offer' ); ?></p>
-                        <a class="libookin-cta" href="<?php echo esc_url( get_permalink( $product_id ) ); ?>"><?php esc_html_e( 'View bundle', 'libookin-monthly-offer' ); ?></a>
+                        <p class="libookin-tagline"><?php echo esc_html( $offer_box_tagline ); ?></p>
+                        <a class="libookin-cta" href="<?php echo esc_url( $offer_of_the_month_page_link ); ?>"><?php esc_html_e( 'Profiter de l\'Offre', 'libookin-monthly-offer' ); ?></a>
                     </aside>
                 </div>
             </div>
