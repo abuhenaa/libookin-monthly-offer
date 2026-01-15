@@ -39,6 +39,7 @@ class Libookin_MO_Shortcodes {
         // Bundle shortcodes
         add_shortcode( 'libookin_bundle_offer', array( $this, 'display_bundle_offer' ) );
         add_shortcode( 'libookin_bundled_thumbs', array( $this, 'display_bundled_thumbs' ) );
+        add_shortcode( 'libookin_bundled_authors', array( $this, 'display_bundled_authors' ) );
     }
 
     /**
@@ -48,67 +49,6 @@ class Libookin_MO_Shortcodes {
         if ( ! wp_style_is( 'libookin-mo-styles', 'enqueued' ) ) {
             wp_enqueue_style( 'libookin-mo-styles', LIBOOKIN_MO_PLUGIN_URL . 'assets/css/styles.css', array(), LIBOOKIN_MO_VERSION );
         }
-    }
-
-    /**
-     * Try to extract bundled product IDs for a woosb product.
-     * Returns array of product IDs (ints) or empty array.
-     * This function is defensive - it attempts several common meta keys and formats.
-     */
-    private function get_woosb_item_ids( $product_id ) {
-        $ids = array();
-
-        // Common meta keys used by some bundle plugins
-        $keys = array( '_woosb', 'woosb', '_woosb_data', '_woosb_products', 'woosb_products', 'woosb_items' );
-
-        foreach ( $keys as $key ) {
-            $val = get_post_meta( $product_id, $key, true );
-            if ( empty( $val ) ) {
-                continue;
-            }
-
-            // If serialized string, try to unserialize
-            if ( is_string( $val ) ) {
-                $maybe = @unserialize( $val );
-                if ( $maybe !== false || $val === 'b:0;' ) {
-                    $val = $maybe;
-                }
-            }
-
-            // If array, walk it to find integers
-            if ( is_array( $val ) ) {
-                $stack = $val;
-                while ( ! empty( $stack ) ) {
-                    $item = array_shift( $stack );
-                    if ( is_int( $item ) || ctype_digit( (string) $item ) ) {
-                        $ids[] = intval( $item );
-                        continue;
-                    }
-                    if ( is_array( $item ) ) {
-                        foreach ( $item as $v ) {
-                            $stack[] = $v;
-                        }
-                        continue;
-                    }
-                    // If object with product_id
-                    if ( is_object( $item ) ) {
-                        if ( isset( $item->product_id ) ) {
-                            $ids[] = intval( $item->product_id );
-                        }
-                        foreach ( (array) $item as $v ) {
-                            $stack[] = $v;
-                        }
-                    }
-                }
-            }
-        }
-
-        // Deduplicate and validate existence
-        $ids = array_filter( array_unique( $ids ), function( $id ) {
-            return get_post_type( $id ) === 'product';
-        } );
-
-        return array_values( $ids );
     }
 
     /**
@@ -233,21 +173,8 @@ class Libookin_MO_Shortcodes {
         // Enqueue styles
         $this->enqueue_styles();
 
-        $items = array();
-        if ( is_callable( array( $product, 'get_bundled_items' ) ) ) {
-            $raw = $product->get_bundled_items();
-            if ( is_array( $raw ) ) {
-                foreach ( $raw as $r ) {
-                    if ( is_object( $r ) && isset( $r->product_id ) ) {
-                        $items[] = intval( $r->product_id );
-                    }
-                }
-            }
-        }
+        $items = $product->get_items();        
 
-        if ( empty( $items ) ) {
-            $items = $this->get_woosb_item_ids( $product_id );
-        }
 
         if ( ! empty( $atts['limit'] ) ) {
             $items = array_slice( $items, 0, intval( $atts['limit'] ) );
@@ -257,7 +184,8 @@ class Libookin_MO_Shortcodes {
         ?>
         <div class="libookin-bundled-thumbs">
             <div class="libookin-books-grid">
-                <?php if ( ! empty( $items ) ) : foreach ( $items as $child_id ) :
+                <?php if ( ! empty( $items ) ) : foreach ( $items as $item ) :
+                    $child_id = $item['id'];
                     $child_post = get_post( $child_id );
                     if ( ! $child_post ) {
                         continue;
@@ -288,6 +216,76 @@ class Libookin_MO_Shortcodes {
                     <p><?php esc_html_e( 'No bundled items found.', 'libookin-monthly-offer' ); ?></p>
                 <?php endif; ?>
             </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * Shortcode: display authors for bundled items
+     * Usage: [libookin_bundled_authors id="123"]
+     */
+    public function display_bundled_authors( $atts ) {
+        if ( ! function_exists( 'wc_get_product' ) ) {
+            return '<div class="libookin-bundled-authors">' . esc_html__( 'WooCommerce is required.', 'libookin-monthly-offer' ) . '</div>';
+        }
+
+        $atts = shortcode_atts( array(
+            'id'    => 0,
+        ), $atts );
+
+        $product_id = intval( $atts['id'] );
+        if ( $product_id <= 0 ) {
+            return '<div class="libookin-bundled-authors">' . esc_html__( 'No bundle product ID provided.', 'libookin-monthly-offer' ) . '</div>';
+        }
+
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return '<div class="libookin-bundled-authors">' . esc_html__( 'Bundle product not found.', 'libookin-monthly-offer' ) . '</div>';
+        }
+        // Enqueue styles
+        $this->enqueue_styles();
+
+        $items = $product->get_items();
+
+        ob_start();
+        ?>
+        <div class="libookin-bundled-authors">
+            <?php
+
+            foreach( $items as $item ) :
+                $item_id = $item['id'];
+                $bundled_post = get_post( $item_id );
+                if ( ! $bundled_post ) {
+                    continue;
+                }
+                // Author detection
+                $author = get_post_field( 'post_author', $item_id );
+                $author_name = $author ? get_the_author_meta( 'display_name', $author ) : '';
+                $author_image = get_avatar_url( $author );
+                $dokan_store_url = function_exists( 'dokan_get_store_url' ) ? dokan_get_store_url( $author ) : '';               
+
+            ?>
+            <div class="libookin-authors-list">
+                <div class="libookin-author-item">
+                    <?php if ( $author_image ) : ?>
+                        <div class="libookin-author-image">
+                            <img src="<?php echo esc_url( $author_image ); ?>" alt="<?php echo esc_attr( $author_name ); ?>">
+                        </div>
+                    <?php endif; ?>
+                    <div class="libookin-author-name">
+                        <h4><?php echo esc_html( $author_name ); ?></h4>
+                    </div>
+                    <div class="libookin-author-bio">
+                        <p><?php echo wp_kses_post( wp_trim_words( get_the_author_meta( 'description', $author ), 20, '...' ) ); ?></p>
+                    </div>
+                    <div class="libookin-author-store">
+                        <a class="button btn-primary" href="<?php echo esc_url( $dokan_store_url ? $dokan_store_url : get_author_posts_url( $author ) ); ?>"><?php esc_html_e( 'View more books', 'libookin-monthly-offer' ); ?></a>
+                    </div>
+                </div>
+            </div>
+
+            <?php endforeach; ?>
         </div>
         <?php
         return ob_get_clean();

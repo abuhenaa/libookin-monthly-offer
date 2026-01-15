@@ -140,6 +140,8 @@ class Libookin_Vote_Display {
         }
 
         $current_month = date( 'Y-m' );
+        //substract 1 month to get last month's winner
+        $current_month = date( 'Y-m', strtotime( '-1 month' ) );
         $winner = Libookin_MO_Database::get_winning_charity( $current_month );
 
         if ( ! $winner ) {

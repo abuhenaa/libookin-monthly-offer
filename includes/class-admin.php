@@ -6,6 +6,7 @@
  */
 
 // Exit if accessed directly
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -24,9 +25,11 @@ class Libookin_MO_Admin {
      * Get instance
      */
     public static function get_instance() {
+
         if ( null === self::$instance ) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
 
@@ -111,23 +114,24 @@ class Libookin_MO_Admin {
      * Enqueue admin scripts
      */
     public function enqueue_admin_scripts( $hook ) {
+
         if ( strpos( $hook, 'libookin' ) === false ) {
             return;
         }
 
-        wp_enqueue_style( 
-            'libookin-mo-admin-styles', 
-            LIBOOKIN_MO_PLUGIN_URL . 'assets/css/admin-styles.css', 
-            array(), 
-            LIBOOKIN_MO_VERSION 
+        wp_enqueue_style(
+            'libookin-mo-admin-styles',
+            LIBOOKIN_MO_PLUGIN_URL . 'assets/css/admin-styles.css',
+            array(),
+            LIBOOKIN_MO_VERSION
         );
 
-        wp_enqueue_script( 
-            'libookin-mo-admin-scripts', 
-            LIBOOKIN_MO_PLUGIN_URL . 'assets/js/admin-scripts.js', 
-            array( 'jquery' ), 
-            LIBOOKIN_MO_VERSION, 
-            true 
+        wp_enqueue_script(
+            'libookin-mo-admin-scripts',
+            LIBOOKIN_MO_PLUGIN_URL . 'assets/js/admin-scripts.js',
+            array( 'jquery' ),
+            LIBOOKIN_MO_VERSION,
+            true
         );
     }
 
@@ -135,57 +139,61 @@ class Libookin_MO_Admin {
      * Display dashboard
      */
     public function display_dashboard() {
+
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
         $current_month = date( 'Y-m' );
-        $results = Libookin_MO_Database::get_vote_results( $current_month );
-        $winner = Libookin_MO_Database::get_winning_charity( $current_month );
+        $results       = Libookin_MO_Database::get_vote_results( $current_month );
+        $winner        = Libookin_MO_Database::get_winning_charity( $current_month );
 
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Monthly Offer Dashboard', 'libookin-monthly-offer' ); ?></h1>
-            
+
             <div class="libookin-admin-dashboard">
                 <div class="libookin-stats-grid">
                     <div class="stat-box">
                         <h3><?php esc_html_e( 'Total Votes This Month', 'libookin-monthly-offer' ); ?></h3>
                         <p class="stat-number">
-                            <?php 
-                            $total_votes = array_sum( wp_list_pluck( $results, 'vote_count' ) );
-                            echo number_format_i18n( $total_votes ); 
-                            ?>
+                            <?php
+$total_votes = array_sum( wp_list_pluck( $results, 'vote_count' ) );
+        echo number_format_i18n( $total_votes );
+        ?>
                         </p>
                     </div>
 
                     <div class="stat-box">
                         <h3><?php esc_html_e( 'Active Charities', 'libookin-monthly-offer' ); ?></h3>
                         <p class="stat-number">
-                            <?php 
-                            $charity_count = wp_count_posts( 'libookin_charity' );
-                            echo number_format_i18n( $charity_count->publish ); 
-                            ?>
+                            <?php
+$charity_count = wp_count_posts( 'libookin_charity' );
+        echo number_format_i18n( $charity_count->publish );
+        ?>
                         </p>
                     </div>
 
                     <div class="stat-box">
                         <h3><?php esc_html_e( 'Current Leader', 'libookin-monthly-offer' ); ?></h3>
                         <p class="stat-text">
-                            <?php 
-                            if ( $winner ) {
-                                echo esc_html( get_the_title( $winner->charity_id ) );
-                            } else {
-                                esc_html_e( 'No votes yet', 'libookin-monthly-offer' );
-                            }
-                            ?>
+                            <?php
+
+        if ( $winner ) {
+            echo esc_html( get_the_title( $winner->charity_id ) );
+        } else {
+            esc_html_e( 'No votes yet', 'libookin-monthly-offer' );
+        }
+
+        ?>
                         </p>
                     </div>
                 </div>
 
                 <div class="libookin-current-results">
                     <h2><?php esc_html_e( 'Current Month Results', 'libookin-monthly-offer' ); ?></h2>
-                    <?php if ( ! empty( $results ) ) : ?>
+                    <?php
+if ( ! empty( $results ) ): ?>
                         <table class="wp-list-table widefat fixed striped">
                             <thead>
                                 <tr>
@@ -196,30 +204,31 @@ class Libookin_MO_Admin {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-                                $rank = 1;
-                                foreach ( $results as $result ) : 
-                                    $percentage = $total_votes > 0 ? ( $result->vote_count / $total_votes ) * 100 : 0;
-                                    ?>
-                                    <tr>
-                                        <td><?php echo esc_html( $rank++ ); ?></td>
-                                        <td>
-                                            <?php echo esc_html( get_the_title( $result->charity_id ) ); ?>
-                                        </td>
-                                        <td><?php echo number_format_i18n( $result->vote_count ); ?></td>
-                                        <td><?php echo number_format_i18n( $percentage, 2 ); ?>%</td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                <?php
+$rank = 1;
+
+        foreach ( $results as $result ):
+            $percentage = $total_votes > 0 ? ( $result->vote_count / $total_votes ) * 100 : 0;
+            ?>
+	                                    <tr>
+	                                        <td><?php echo esc_html( $rank++ ); ?></td>
+	                                        <td>
+	                                            <?php echo esc_html( get_the_title( $result->charity_id ) ); ?>
+	                                        </td>
+	                                        <td><?php echo number_format_i18n( $result->vote_count ); ?></td>
+	                                        <td><?php echo number_format_i18n( $percentage, 2 ); ?>%</td>
+	                                    </tr>
+	                                <?php endforeach; ?>
                             </tbody>
                         </table>
-                    <?php else : ?>
+                    <?php else: ?>
                         <p><?php esc_html_e( 'No votes recorded for this month yet.', 'libookin-monthly-offer' ); ?></p>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
         <?php
-    }
+}
 
     /**
      * Display vote results page
@@ -230,22 +239,22 @@ class Libookin_MO_Admin {
         }
 
         // Get selected month or current month
-        $selected_month = isset( $_GET['month'] ) ? sanitize_text_field( $_GET['month'] ) : date( 'Y-m' );
-        $results = Libookin_MO_Database::get_vote_results( $selected_month );
-        $votes_details = Libookin_MO_Database::get_votes_with_details( $selected_month );
+        $selected_month = isset( $_GET[ 'month' ] ) ? sanitize_text_field( $_GET[ 'month' ] ) : date( 'Y-m' );
+        $results        = Libookin_MO_Database::get_vote_results( $selected_month );
+        $votes_details  = Libookin_MO_Database::get_votes_with_details( $selected_month );
 
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Vote Results', 'libookin-monthly-offer' ); ?></h1>
-            
+
             <div class="libookin-admin-filters">
                 <form method="get">
                     <input type="hidden" name="page" value="libookin-vote-results">
                     <label for="month-select"><?php esc_html_e( 'Select Month:', 'libookin-monthly-offer' ); ?></label>
                     <input type="month" id="month-select" name="month" value="<?php echo esc_attr( $selected_month ); ?>">
                     <button type="submit" class="button"><?php esc_html_e( 'Filter', 'libookin-monthly-offer' ); ?></button>
-                    
-                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=libookin-vote-results&action=export_csv&month=' . $selected_month ) ); ?>" 
+
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=libookin-vote-results&action=export_csv&month=' . $selected_month ) ); ?>"
                        class="button button-primary">
                         <?php esc_html_e( 'Export CSV', 'libookin-monthly-offer' ); ?>
                     </a>
@@ -254,7 +263,8 @@ class Libookin_MO_Admin {
 
             <h2><?php echo esc_html( date( 'F Y', strtotime( $selected_month . '-01' ) ) ); ?></h2>
 
-            <?php if ( ! empty( $results ) ) : ?>
+            <?php
+if ( ! empty( $results ) ): ?>
                 <h3><?php esc_html_e( 'Summary', 'libookin-monthly-offer' ); ?></h3>
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
@@ -265,17 +275,18 @@ class Libookin_MO_Admin {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                        $total_votes = array_sum( wp_list_pluck( $results, 'vote_count' ) );
-                        foreach ( $results as $result ) : 
-                            $percentage = $total_votes > 0 ? ( $result->vote_count / $total_votes ) * 100 : 0;
-                            ?>
-                            <tr>
-                                <td><?php echo esc_html( get_the_title( $result->charity_id ) ); ?></td>
-                                <td><?php echo number_format_i18n( $result->vote_count ); ?></td>
-                                <td><?php echo number_format_i18n( $percentage, 2 ); ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
+                        <?php
+$total_votes = array_sum( wp_list_pluck( $results, 'vote_count' ) );
+
+        foreach ( $results as $result ):
+            $percentage = $total_votes > 0 ? ( $result->vote_count / $total_votes ) * 100 : 0;
+            ?>
+	                            <tr>
+	                                <td><?php echo esc_html( get_the_title( $result->charity_id ) ); ?></td>
+	                                <td><?php echo number_format_i18n( $result->vote_count ); ?></td>
+	                                <td><?php echo number_format_i18n( $percentage, 2 ); ?>%</td>
+	                            </tr>
+	                        <?php endforeach; ?>
                     </tbody>
                 </table>
 
@@ -290,7 +301,8 @@ class Libookin_MO_Admin {
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ( $votes_details as $vote ) : ?>
+                        <?php
+foreach ( $votes_details as $vote ): ?>
                             <tr>
                                 <td>
                                     <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $vote->order_id . '&action=edit' ) ); ?>">
@@ -298,14 +310,15 @@ class Libookin_MO_Admin {
                                     </a>
                                 </td>
                                 <td>
-                                    <?php if ( $vote->user_id ) :
-                                        $user = get_userdata( $vote->user_id );
-                                        $name = $user->first_name . ' ' . $user->last_name;
-                                    ?>
-                                        <a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . $vote->user_id ) ); ?>">
-                                            <?php echo esc_html( $name ); ?>
-                                        </a>
-                                    <?php else : ?>
+                                    <?php
+if ( $vote->user_id ):
+            $user = get_userdata( $vote->user_id );
+            $name = $user->first_name . ' ' . $user->last_name;
+            ?>
+	                                        <a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . $vote->user_id ) ); ?>">
+	                                            <?php echo esc_html( $name ); ?>
+	                                        </a>
+	                                    <?php else: ?>
                                         <?php esc_html_e( 'Guest', 'libookin-monthly-offer' ); ?>
                                     <?php endif; ?>
                                 </td>
@@ -315,22 +328,22 @@ class Libookin_MO_Admin {
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            <?php else : ?>
+            <?php else: ?>
                 <p><?php esc_html_e( 'No votes recorded for this month.', 'libookin-monthly-offer' ); ?></p>
             <?php endif; ?>
         </div>
         <?php
-    }
+}
 
     /**
      * Handle CSV export
      */
     public function handle_csv_export() {
-        if ( ! isset( $_GET['action'] ) || $_GET['action'] !== 'export_csv' ) {
+        if ( ! isset( $_GET[ 'action' ] ) || 'export_csv' !== $_GET[ 'action' ] ) {
             return;
         }
 
-        if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'libookin-vote-results' ) {
+        if ( ! isset( $_GET[ 'page' ] ) || 'libookin-vote-results' !== $_GET[ 'page' ] ) {
             return;
         }
 
@@ -338,7 +351,7 @@ class Libookin_MO_Admin {
             return;
         }
 
-        $month = isset( $_GET['month'] ) ? sanitize_text_field( $_GET['month'] ) : date( 'Y-m' );
+        $month = isset( $_GET[ 'month' ] ) ? sanitize_text_field( $_GET[ 'month' ] ) : date( 'Y-m' );
         $votes = Libookin_MO_Database::get_votes_with_details( $month );
 
         if ( empty( $votes ) ) {
@@ -355,12 +368,12 @@ class Libookin_MO_Admin {
         $output = fopen( 'php://output', 'w' );
 
         // Add BOM for UTF-8
-        fprintf( $output, chr(0xEF).chr(0xBB).chr(0xBF) );
+        fprintf( $output, chr( 0xEF ) . chr( 0xBB ) . chr( 0xBF ) );
 
         // Add headers
         fputcsv( $output, array( 'Order ID', 'User ID', 'Charity', 'Vote Date' ) );
 
-        // Add data
+// Add data
         foreach ( $votes as $vote ) {
             fputcsv( $output, array(
                 $vote->order_id,
@@ -382,13 +395,13 @@ class Libookin_MO_Admin {
             return;
         }
 
-        $selected_month = isset( $_GET['month'] ) ? sanitize_text_field( $_GET['month'] ) : date( 'Y-m' );
-        $earnings = Libookin_MO_Database::get_charity_earnings( $selected_month );
+        $selected_month = isset( $_GET[ 'month' ] ) ? sanitize_text_field( $_GET[ 'month' ] ) : date( 'Y-m' );
+        $earnings       = Libookin_MO_Database::get_charity_earnings( $selected_month );
 
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Charity Earnings', 'libookin-monthly-offer' ); ?></h1>
-            
+
             <div class="libookin-charity-earnings">
                 <div class="libookin-admin-filters">
                     <form method="get">
@@ -406,15 +419,15 @@ class Libookin_MO_Admin {
                                 <th><?php esc_html_e( 'Total Earnings', 'libookin-monthly-offer' ); ?></th>
                             </tr>
                         </thead>
-                        <?php if ( empty( $earnings ) ) : ?>
+                        <?php if ( empty( $earnings ) ): ?>
                             <tbody>
                                 <tr>
                                     <td colspan="2"><?php esc_html_e( 'No earnings recorded for this month.', 'libookin-monthly-offer' ); ?></td>
                                 </tr>
                             </tbody>
-                        <?php else : ?>
+                        <?php else: ?>
                         <tbody>
-                            <?php foreach ( $earnings as $earning ) : ?>
+                            <?php foreach ( $earnings as $earning ): ?>
                                 <tr>
                                     <td><?php echo esc_html( get_the_title( $earning->charity_id ) ); ?></td>
                                     <td><?php echo wc_price( $earning->total_earnings ); ?></td>
@@ -427,7 +440,7 @@ class Libookin_MO_Admin {
             </div>
         </div>
         <?php
-    }
+}
 
     /**
      * Settings page
@@ -437,28 +450,34 @@ class Libookin_MO_Admin {
             return;
         }
 
-        // Handle form submission
-        if ( isset( $_POST['libookin_mo_settings_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['libookin_mo_settings_nonce'] ) ), 'libookin_mo_save_settings' ) ) {
-            $popup_link = isset( $_POST['popup_link'] ) ? esc_url_raw( $_POST['popup_link'] ) : '';
-            $offer_of_the_month_page_link = isset( $_POST['offer_of_the_month_page_link'] ) ? esc_url_raw( $_POST['offer_of_the_month_page_link'] ) : '';
-            $offer_box_tagline = isset( $_POST['offer_box_tagline'] ) ? sanitize_text_field( $_POST['offer_box_tagline'] ) : '';
-            $learn_more_title = isset( $_POST['learn_more_title'] ) ? sanitize_text_field( $_POST['learn_more_title'] ) : '';
-            $learn_more_description = isset( $_POST['learn_more_description'] ) ? sanitize_textarea_field( $_POST['learn_more_description'] ) : '';
+// Handle form submission
+        if ( isset( $_POST[ 'libookin_mo_settings_nonce' ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ 'libookin_mo_settings_nonce' ] ) ), 'libookin_mo_save_settings' ) ) {
+            $popup_link                   = isset( $_POST[ 'popup_link' ] ) ? esc_url_raw( $_POST[ 'popup_link' ] ) : '';
+            $offer_of_the_month_page_link = isset( $_POST[ 'offer_of_the_month_page_link' ] ) ? esc_url_raw( $_POST[ 'offer_of_the_month_page_link' ] ) : '';
+            $offer_box_tagline            = isset( $_POST[ 'offer_box_tagline' ] ) ? sanitize_text_field( $_POST[ 'offer_box_tagline' ] ) : '';
+            $offer_badge_text             = isset( $_POST[ 'offer_badge_text' ] ) ? sanitize_text_field( $_POST[ 'offer_badge_text' ] ) : '';
+            $price_note_text              = isset( $_POST[ 'price_note_text' ] ) ? sanitize_text_field( $_POST[ 'price_note_text' ] ) : '';
+            $learn_more_title             = isset( $_POST[ 'learn_more_title' ] ) ? sanitize_text_field( $_POST[ 'learn_more_title' ] ) : '';
+            $learn_more_description       = isset( $_POST[ 'learn_more_description' ] ) ? sanitize_textarea_field( $_POST[ 'learn_more_description' ] ) : '';
 
             update_option( 'libookin_popup_link', $popup_link );
             update_option( 'libookin_offer_of_the_month_page_link', $offer_of_the_month_page_link );
             update_option( 'libookin_offer_box_tagline', $offer_box_tagline );
+            update_option( 'libookin_offer_badge_text', $offer_badge_text );
+            update_option( 'libookin_price_note_text', $price_note_text );
             update_option( 'libookin_learn_more_title', $learn_more_title );
             update_option( 'libookin_learn_more_description', $learn_more_description );
 
             echo '<div class="updated"><p>' . esc_html__( 'Settings saved.', 'libookin-monthly-offer' ) . '</p></div>';
         }
 
-        $popup_link = get_option( 'libookin_popup_link', '' );
+        $popup_link                   = get_option( 'libookin_popup_link', '' );
         $offer_of_the_month_page_link = get_option( 'libookin_offer_of_the_month_page_link', '' );
-        $offer_box_tagline = get_option( 'libookin_offer_box_tagline', '' );
-        $learn_more_title = get_option( 'libookin_learn_more_title', '' );
-        $learn_more_description = get_option( 'libookin_learn_more_description', '' );
+        $offer_box_tagline            = get_option( 'libookin_offer_box_tagline', '' );
+        $offer_badge_text             = get_option( 'libookin_offer_badge_text', '' );
+        $price_note_text              = get_option( 'libookin_price_note_text', '' );
+        $learn_more_title             = get_option( 'libookin_learn_more_title', '' );
+        $learn_more_description       = get_option( 'libookin_learn_more_description', '' );
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Monthly Offer Settings', 'libookin-monthly-offer' ); ?></h1>
@@ -469,22 +488,22 @@ class Libookin_MO_Admin {
                    <tr>
                     <th scope="row"><?php esc_html_e( 'Popup link', 'libookin-monthly-offer' ); ?></th>
                     <td>
-                        <input 
-                            type="text" 
-                            name="popup_link" 
-                            value="<?php echo esc_url( $popup_link ); ?>" 
-                            class="regular-text" 
+                        <input
+                            type="text"
+                            name="popup_link"
+                            value="<?php echo esc_url( $popup_link ); ?>"
+                            class="regular-text"
                             placeholder="<?php esc_attr_e( 'https://example.com/popup', 'libookin-monthly-offer' ); ?>">
                         <p class="description"><?php esc_html_e( 'Link to the popup content.', 'libookin-monthly-offer' ); ?></p>
                    </tr>
                    <tr>
                     <th scope="row"><?php esc_html_e( 'Offer of the Month Page Link', 'libookin-monthly-offer' ); ?></th>
                     <td>
-                        <input 
-                            type="text" 
-                            name="offer_of_the_month_page_link" 
-                            value="<?php echo esc_url( $offer_of_the_month_page_link ); ?>" 
-                            class="regular-text" 
+                        <input
+                            type="text"
+                            name="offer_of_the_month_page_link"
+                            value="<?php echo esc_url( $offer_of_the_month_page_link ); ?>"
+                            class="regular-text"
                             placeholder="<?php esc_attr_e( 'https://example.com/offer-of-the-month', 'libookin-monthly-offer' ); ?>">
                         <p class="description"><?php esc_html_e( 'Link to the offer of the month page.', 'libookin-monthly-offer' ); ?></p>
                     </td>
@@ -492,23 +511,47 @@ class Libookin_MO_Admin {
                    <tr>
                     <th scope="row"><?php esc_html_e( 'Offer Box Tagline', 'libookin-monthly-offer' ); ?></th>
                     <td>
-                        <input 
-                            type="text" 
-                            name="offer_box_tagline" 
-                            value="<?php echo esc_attr( $offer_box_tagline ); ?>" 
-                            class="regular-text" 
+                        <input
+                            type="text"
+                            name="offer_box_tagline"
+                            value="<?php echo esc_attr( $offer_box_tagline ); ?>"
+                            class="regular-text"
                             placeholder="<?php esc_attr_e( 'Et laissez parler votre coeur', 'libookin-monthly-offer' ); ?>">
                         <p class="description"><?php esc_html_e( 'Tagline for the offer box.', 'libookin-monthly-offer' ); ?></p>
                     </td>
                    </tr>
                    <tr>
+                    <th scope="row"><?php esc_html_e( 'Offer Badge Text', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input
+                            type="text"
+                            name="offer_badge_text"
+                            value="<?php echo esc_attr( get_option( 'libookin_offer_badge_text', '' ) ); ?>"
+                            class="regular-text"
+                            placeholder="<?php esc_attr_e( 'Offer of the Month', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Text for the offer badge.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+                   <tr>
+                    <th scope="row"><?php esc_html_e( 'Price Note Text', 'libookin-monthly-offer' ); ?></th>
+                    <td>
+                        <input
+                            type="text"
+                            name="price_note_text"
+                            value="<?php echo esc_attr( get_option( 'libookin_price_note_text', '' ) ); ?>"
+                            class="regular-text"
+                            placeholder="<?php esc_attr_e( '* Price includes VAT where applicable', 'libookin-monthly-offer' ); ?>">
+                        <p class="description"><?php esc_html_e( 'Note text displayed with the price.', 'libookin-monthly-offer' ); ?></p>
+                    </td>
+                   </tr>
+                   <tr>
                     <th scope="row"><?php esc_html_e( 'Learn More Title', 'libookin-monthly-offer' ); ?></th>
                     <td>
-                        <input 
-                            type="text" 
-                            name="learn_more_title" 
-                            value="<?php echo esc_attr( $learn_more_title ); ?>" 
-                            class="regular-text" 
+                        <input
+                            type="text"
+                            name="learn_more_title"
+                            value="<?php echo esc_attr( $learn_more_title ); ?>"
+                            class="regular-text"
                             placeholder="<?php esc_attr_e( 'Learn More', 'libookin-monthly-offer' ); ?>">
                         <p class="description"><?php esc_html_e( 'Title for the learn more section.', 'libookin-monthly-offer' ); ?></p>
                     </td>
@@ -516,9 +559,9 @@ class Libookin_MO_Admin {
                    <tr>
                     <th scope="row"><?php esc_html_e( 'Learn More Description', 'libookin-monthly-offer' ); ?></th>
                     <td>
-                        <textarea 
-                            name="learn_more_description" 
-                            class="regular-text" 
+                        <textarea
+                            name="learn_more_description"
+                            class="regular-text"
                             placeholder="<?php esc_attr_e( 'Discover more about our special offer.', 'libookin-monthly-offer' ); ?>"
                         ><?php echo esc_textarea( $learn_more_description ); ?></textarea>
                         <p class="description"><?php esc_html_e( 'Description for the learn more section.', 'libookin-monthly-offer' ); ?></p>
@@ -535,5 +578,5 @@ class Libookin_MO_Admin {
             </form>
         </div>
         <?php
-    }
+}
 }
