@@ -3,7 +3,7 @@
  * Plugin Name: LiBookin Monthly Offer
  * Plugin URI: https://libookin.com
  * Description: Monthly ebook bundle system with charity voting integration for WooCommerce Product Bundles
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Abu Hena
  * Author URI: https://www.example.com
  * License: GPL2
@@ -64,7 +64,6 @@ class Libookin_Monthly_Offer {
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-database.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-charity-post-type.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-vote-handler.php';
-        require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-bundle-product.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-vote-display.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-admin.php';
         require_once LIBOOKIN_MO_PLUGIN_DIR . 'includes/class-shortcodes.php';
@@ -95,7 +94,6 @@ class Libookin_Monthly_Offer {
         // Initialize components
         Libookin_Charity_Post_Type::get_instance();
         Libookin_Vote_Handler::get_instance();
-        Libookin_Bundle_Product::get_instance();
         Libookin_Vote_Display::get_instance();
         Libookin_MO_Admin::get_instance();
         Libookin_MO_Shortcodes::get_instance();
